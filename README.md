@@ -28,6 +28,8 @@ Creates Windows shortcuts
 * Click (or double click) to launch the shortcut
 * Enables interacting with Python programs more "Windows-like"
 
+
+
 ## Installation
 
 ### Using PIP with PyPI
@@ -36,11 +38,11 @@ The latest official release of PySimpleGUI products can be found on PyPI.  To pi
 
 #### If you use the command `python` on your computer to invoke Python (Windows):
 
-`pip install --upgrade psgshortcut`
+`python -m pip install --upgrade psgshortcut`
 
 #### If you use the command `python3` on your computer to invoke Python (Linux, Mac):
 
-`pip3 install --upgrade psgshortcut`
+`python3 -m pip install --upgrade psgshortcut`
 
 ### Using PIP with GitHub
 
@@ -48,16 +50,11 @@ You can also pip install the PySimpleGUI Applications that are in the PySimpleGU
 
 #### If you use the command `python` on your computer to invoke Python (Windows):
 
-```bash
-python -m pip install --upgrade https://github.com/PySimpleGUI/psgshortcut/zipball/main
-```
+`python -m pip install --upgrade https://github.com/PySimpleGUI/psgshortcut/zipball/main`
 
 #### If you use the command `python3` on your computer to invoke Python (Linux, Mac):
 
-```bash
-python3 -m pip install --upgrade https://github.com/PySimpleGUI/psgshortcut/zipball/main
-```
-
+`python3 -m pip install --upgrade https://github.com/PySimpleGUI/psgshortcut/zipball/main`
 
 ## Usage
 
@@ -103,15 +100,9 @@ on your desktop or other location.
 
 ## License & Copyright
 
-Copyright 2023-2024 PySimpleSoft, Inc. and/or its licensors.
+Copyright 2023-2026 PySimpleGUI.
 
-This is a free-to-use "Utility" and is licensed under the
-PySimpleGUI License Agreement, a copy of which is included in the
-license.txt file and also available at https://pysimplegui.com/eula.
-
-Please see Section 1.2 of the license regarding the use of this Utility,
-and see https://pysimplegui.com/faq for any questions.
-
+Licensed under LGPL3.
 
 ## Contributing
 
