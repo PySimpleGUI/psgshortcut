@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import io
+import ast
 import base64
 import hashlib
 import subprocess
@@ -61,6 +62,8 @@ __version__ = version.split()[0]
                                  (button glyphs, tray icons) - a program with only those gets the PySimpleGUI default icon.  SHChangeNotify
                                  after writing the .lnk; a changed icon is written as <name>_<hash>.ico instead of over the old file, because
                                  Explorer's icon cache keeps showing the old picture for a path it has already seen
+        6.1     01-Nov-2026      Claude: Icons split over several lines are found - NAME = b''.join((b'iVBOR...', b'...')) or (b'...' b'...'),
+                                 the way make_icons.py writes them (Player Coach).  They were missed and the shortcut got another image
 """
 
 # --------------------------------------------------------------------------------------------------------------------------------------------
@@ -237,6 +240,28 @@ def looks_blank(b64):
         return True                                                             # not decodable -> not usable as an icon either
 
 
+def _b64_images_in_code(src):
+    """NAME -> base64 for images whose literal the regex above can't see because it is split over lines:  NAME = (b'iVBOR...' b'...')
+    or  NAME = b''.join((b'iVBOR...', b'...'))  - the way icon makers write big icons.  Uses the program's syntax tree; {} if it won't parse"""
+    try:
+        tree = ast.parse(src)
+    except (SyntaxError, ValueError):
+        return {}
+    found = {}
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)):
+            continue
+        value = node.value
+        joined = isinstance(value, ast.Call) and isinstance(value.func, ast.Attribute) and value.func.attr == 'join' and len(value.args) == 1
+        parts = value.args[0].elts if joined and isinstance(value.args[0], (ast.Tuple, ast.List)) else [value]
+        if not all(isinstance(p, ast.Constant) and isinstance(p.value, (bytes, str)) for p in parts):
+            continue
+        text = ''.join(''.join(p.value.decode('latin-1') if isinstance(p.value, bytes) else p.value for p in parts).split())
+        if text.startswith(('iVBORw0KGgo', 'R0lGOD')):
+            found[node.targets[0].id] = text
+    return found
+
+
 def extract_icon_from_source(path):
     """
     Look through a Python source file for the icon a PySimpleGUI program uses.
@@ -253,6 +278,7 @@ def extract_icon_from_source(path):
     except Exception as e:
         return None, f'Could not read the file: {e}'
     found = {m.group(1): m.group(3) for m in _B64_ASSIGN.finditer(src) if not looks_blank(m.group(3))}
+    found.update({n: b64 for n, b64 in _b64_images_in_code(src).items() if n not in found and not looks_blank(b64)})      # split-over-lines icons too
     strip = lambda names: [n.split('.')[-1] for n in names]
     globals_ = strip(_ICON_GLOBAL.findall(src))
     kwargs = strip(_ICON_KWARG.findall(src))
