@@ -1,2 +1,4 @@
 PySimpleGUI>=5
 pywin32
+psgdnd
+pillow

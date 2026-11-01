@@ -7,28 +7,22 @@
 
 PySimpleGUI Shortcut Tool
 
-Creates Windows shortcuts
+Creates Windows shortcuts for Python programs (and anything else) - drop the file on the window, click Create Shortcut.
 
-
-
-
-
-<p align="center"><img width="523" height="174" src="screenshot.png"><p>
-
-
-
-
-
-
+<p align="center"><img width="934" height="680" src="screenshot.png"><p>
 
 ## Features
 
-* Makes shortcuts for any file
-* Shortcuts can be added to your desktop or pin to the taskbar
-* Click (or double click) to launch the shortcut
-* Enables interacting with Python programs more "Windows-like"
-
-
+* **Drag and drop** - drop a `.py`, `.pyw`, `.exe` or any file anywhere on the window
+* **Automatic icon** - the icon embedded in a PySimpleGUI program (`ICON = b'iVBORw0KGgo...'`) is found, converted to a `.ico` and used for the shortcut.  Programs without an icon get the PySimpleGUI default icon
+* **Icon preview** - see the icon the shortcut will get before you make it; use your own `.ico` / `.png` / `.gif` / `.jpg` instead if you prefer
+* **Choose where it goes** - same folder as the program, the Desktop, the Start Menu (so you can pin it to the taskbar) or any folder
+* **Pins properly** - the shortcut carries the program's Windows taskbar App ID, so the running window groups under its own pinned icon (works with PySimpleGUI 6.3.17+ and older versions)
+* **Right launcher automatically** - `.pyw` files are launched with `pythonw.exe` (no console window), `.py` files with `python.exe`
+* **Shortcut name, arguments and description (tooltip)** are all optional
+* **Shortcut to this program** - one click fills in a shortcut to psgshortcut itself, so you can pin psgshortcut to your taskbar or Desktop
+* Makes shortcuts to EXE and other files too - Windows uses the file's own icon unless you choose another
+* Dark HarborMist theme, Escape closes the window, Settings on the right-click menu
 
 ## Installation
 
@@ -56,47 +50,47 @@ You can also pip install the PySimpleGUI Applications that are in the PySimpleGU
 
 `python3 -m pip install --upgrade https://github.com/PySimpleGUI/psgshortcut/zipball/main`
 
+### Requirements
+
+Installed automatically by pip: `PySimpleGUI`, `pywin32` (writes the `.lnk` files), `psgdnd` (drag and drop) and `pillow` (makes the `.ico` files).
+psgshortcut still runs if `psgdnd` or `pillow` are missing - you just lose drag and drop, or icon conversion.
+
 ## Usage
 
 Once installed, launch psgshortcut by typing the following in your command line:
 
 `psgshortcut`
 
-## Create a Shortcut To This Program
+You can also pass a file:  `psgshortcut my_program.pyw` pre-fills the target.
 
-Use this program to make a shortcut to itself so that you can then put
-on your desktop or pin to your taskbar or ???
+1. Drop your program on the window (or click Browse)
+2. Check the icon in the preview, pick where the shortcut should go
+3. Click **Create Shortcut** (or press Enter)
 
+The shortcut is a normal Windows `.lnk` file - move it anywhere, double-click it, or pin it to the taskbar.
 
-To do this, follow these steps:
+## Make a Shortcut To This Program
 
-1. Open a command window (I promise, it's the last time you'll need to for this program)
-2. Type - `where psgshortcut`
-3. Copy the line that `where psgshortcut` gave you into the first input of the shortcut maker program
-4. Run psgshortcut by typing `psgshortcut` in your command window
-5. Right click and choose "File Location"
-6. Copy the file location results, but change the extension from .py to .ico and paste into the Icon file input of the shortcut maker
-7. Click "Create Shortcut"
-
-These steps will create a shortcut in the same folder as the target
-file.  You can safely move this shortcut file any place you want (like
-to your desktop). Double-click the shortcut and your program should
-launch.
+Click **Shortcut to this program**.  The form is filled in with psgshortcut itself (icon included), pick a destination and click **Create Shortcut**.  Put it on your Desktop or in the Start Menu and pin it from there - no command window needed.
 
 ## Make Shortcuts To Anything
 
-You can not only make shortcuts to Python programs, but you can make
-shortcuts to EXE and other files.  The GUI is self-explanatory.  Fill
-in the inputs, click the Make Shortcut button and you'll find the
-shortcut in the same folder as the target program.
+You can not only make shortcuts to Python programs, but you can make shortcuts to EXE and other files.  Drop the file on the window, click **Create Shortcut** and you'll find the shortcut in the folder you chose.
 
-## Important Note - Pinning To Taskbar Requires "Python Command"
+## Pinning To The Taskbar
 
-If you wish to pin your shortcut to the taskbar, then be sure to fill
-in the "Python Command" field with the full path to your pythonw.exe
-file.  Without it you'll get "IDLE" as the program that's pinned.  You
-can skip filling in this field if you're going to place the shortcut
-on your desktop or other location.
+Windows will only pin shortcuts whose target is an EXE, which is why Python shortcuts are made with `pythonw.exe` (or `python.exe`) as the target and your program as the argument - the **Python** field shows which one will be used.  Put the shortcut in the **Start Menu** or on the **Desktop**, then right-click it → *Pin to taskbar*.
+
+For the running program to group under its pinned icon (instead of opening a second, generic Python icon) the shortcut must carry the same taskbar App ID the program sets.  psgshortcut writes the `.lnk` with `IShellLink` + `IPropertyStore` and sets `System.AppUserModel.ID` to:
+
+* `PySimpleGUI.App.<md5 of the script path>` for programs run with PySimpleGUI 6.3.17 or newer (the ID PySimpleGUI derives from the script path - psgshortcut asks the interpreter in the **Python** field which version it has)
+* `mycompany.myproduct.subproduct.version` for programs run with an older PySimpleGUI
+* whatever the program passes to `sg.set_options(win_app_id=...)`, if it does
+* no ID for programs that don't use PySimpleGUI
+
+## Where the Icons Go
+
+The `.ico` files made from your programs' embedded icons are saved next to the program (`my_program.pyw` → `my_program.ico`).  Right-click → **Settings** can send them to one central folder (`%LOCALAPPDATA%\psgshortcut\icons`) instead if you prefer to keep program folders clean.
 
 ## License & Copyright
 
@@ -106,22 +100,6 @@ Licensed under LGPL3.
 
 ## Contributing
 
-We are happy to receive issues describing bug reports and feature
-requests! If your bug report relates to a security vulnerability,
-please do not file a public issue, and please instead reach out to us
-at issues@PySimpleGUI.com.
+I'm happy to receive issues describing bug reports and feature
+requests! The project does not accept pull requests.  
 
-We do not accept (and do not wish to receive) contributions of
-user-created or third-party code, including patches, pull requests, or
-code snippets incorporated into submitted issues. Please do not send
-us any such code! Bug reports and feature requests should not include
-any source code.
-
-If you nonetheless submit any user-created or third-party code to us,
-(1) you assign to us all rights and title in or relating to the code;
-and (2) to the extent any such assignment is not fully effective, you
-hereby grant to us a royalty-free, perpetual, irrevocable, worldwide,
-unlimited, sublicensable, transferrable license under all intellectual
-property rights embodied therein or relating thereto, to exploit the
-code in any manner we choose, including to incorporate the code into
-PySimpleGUI and to redistribute it under any terms at our discretion.

@@ -10,9 +10,9 @@ def readme():
 
 setuptools.setup(
 name="psgshortcut",
-version="6.0",
+version="6.1",
 author="PySimpleGUI",
-install_requires=["PySimpleGUI","pywin32"],
+install_requires=["PySimpleGUI","pywin32","psgdnd","pillow"],
 description="Utility made with PySimpleGUI to create shortcuts of files or programs",
 long_description=readme(),
 long_description_content_type="text/markdown",
