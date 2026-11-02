@@ -2,7 +2,7 @@ import setuptools
 
 def readme():
     try:
-        with open('README.md') as f:
+        with open('README.md', encoding='utf-8') as f:
             return f.read()
     except IOError:
         return ''
@@ -20,14 +20,13 @@ license='GNU Lesser General Public License v3 (LGPLv3)',
 keywords="GUI UI PySimpleGUI tkinter psgshortcut shortcut windows taskbar",
 url="https://github.com/PySimpleGUI/psgshortcut",
 packages=setuptools.find_packages(),
-python_requires=">=3.6",
+python_requires=">=3.7",
 classifiers=[
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: OS Independent",
     "Framework :: PySimpleGUI",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",

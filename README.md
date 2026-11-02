@@ -9,7 +9,7 @@ PySimpleGUI Shortcut Tool
 
 Creates Windows shortcuts for Python programs (and anything else) - drop the file on the window, click Create Shortcut.
 
-<p align="center"><img width="934" height="680" src="screenshot.png"><p>
+<p align="center"><img width="934" height="680" src="https://raw.githubusercontent.com/PySimpleGUI/psgshortcut/main/screenshot.png"><p>
 
 ## Features
 
